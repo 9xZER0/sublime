@@ -1,0 +1,8 @@
+<snippet>
+    <content><![CDATA[
+void YES() { return void(cout << "Yes" << endl); }
+void NO() { return void(cout << "No" << endl); }
+    ]]></content>
+    <tabTrigger>yes_no_YES_NO</tabTrigger>
+    <description>Snippet generated from yes_no_02</description>
+</snippet>
