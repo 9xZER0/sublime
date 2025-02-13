@@ -1,0 +1,76 @@
+<snippet>
+	<content><![CDATA[
+struct dsu_rollback {
+    vector<int> parent, sizee;
+    vector<pair<int&, int>> history;
+    int comp;
+
+    dsu_rollback(int n) : parent(n + 1), sizee(n + 1, 1), comp(n) {
+        iota(parent.begin(), parent.end(), 0);
+    }
+
+    int find_parent(int x) { return x == parent[x] ? x : find_parent(parent[x]); }
+
+    void unite(int a, int b) {
+        a = find_parent(a), b = find_parent(b);
+        if (a == b) return;
+        if (sizee[a] < sizee[b]) swap(a, b);
+
+        // {int&, int}
+        // {curValue, prevValue}
+        history.emplace_back(parent[b], parent[b]);
+        history.emplace_back(sizee[a], sizee[a]);
+        history.emplace_back(comp, comp);
+
+        comp--;
+        parent[b] = a;
+        sizee[a] += sizee[b];
+    }
+
+    int snapshot() { return history.size(); }
+
+    void rollback(int until) {
+        while (snapshot() > until) {
+            auto& [ref, old_value] = history.back();
+            ref = old_value;
+            history.pop_back();
+        }
+    }
+};
+
+dsu_rollback d(0);
+
+vector<pair<int, int>> alive[4 * N];
+void update(int n, int b, int e, int i, int j, pair<int, int> &p) {
+    if (b > j || e < i) return;
+    if (b >= i && e <= j) {
+        // edge p alive in this range
+        alive[n].push_back(p);
+        return;
+    }
+    int l = 2 * n, r = l + 1, mid = b + e >> 1;
+    update(l, b, mid, i, j, p);
+    update(r, mid + 1, e, i, j, p);
+}
+int ans[N];
+void dfs(int n, int b, int e) {
+    if (b > e) return;
+    int prevsz = d.snapshot();
+    for (auto p : alive[n]) d.unite(p.first, p.second);
+    if (b == e) {
+        // Find ans for this configuration
+        ans[b] = d.comp;
+        d.rollback(prevsz);
+        return;
+    }
+    int l = 2 * n, r = l + 1, mid = b + e >> 1;
+    dfs(l, b, mid);
+    dfs(r, mid + 1, e);
+    d.rollback(prevsz);
+}
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	 <tabTrigger>dynamic_connectivity</tabTrigger> 
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	 <scope>source.c++</scope> 
+</snippet>

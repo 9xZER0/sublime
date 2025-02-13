@@ -1,0 +1,27 @@
+<snippet>
+    <content><![CDATA[
+const int mod1 = int(1e9) + 7;
+const int mod2 = 998244353;
+
+int expo(intll x, int y, int p) {
+    int res = 1;
+    x = x % p;
+    if (x == 0) return 0;
+
+    while (y > 0) {
+        if (y & 1) res = (1ll * res * x) % p;
+
+        y = y >> 1;
+        x = (1ll * x * x) % p;
+    }
+    return (res + p) % p;
+}
+
+// inv(2, mod1) = 500000004;
+int inv(int n, int p) {
+    return expo(n, p - 2, p);
+}
+]]></content>
+    <tabTrigger>binary_exponention</tabTrigger>
+    <description>Snippet generated from binary_exponention</description>
+</snippet>

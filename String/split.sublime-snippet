@@ -1,0 +1,18 @@
+<snippet>
+	<content><![CDATA[
+template<typename Out> void split(const string &s, char delim, Out result) {
+	stringstream ss; ss.str(s); string item;
+	while (getline(ss, item, delim)) {
+		*(result++) = item;
+	}
+}
+vector<string> split(const string &s, char delim) {
+	vector<string> elems; split(s, delim, back_inserter(elems));
+	return elems;
+}
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	 <tabTrigger>string_split</tabTrigger> 
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	 <scope>source.c++</scope> 
+</snippet>

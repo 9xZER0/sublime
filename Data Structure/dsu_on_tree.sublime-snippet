@@ -1,0 +1,84 @@
+<snippet>
+	<content><![CDATA[
+struct dsu {
+	vector<int> nodes;
+	int component;
+	int N;
+	vector<map<int, int>> mp;
+
+	dsu(int n) : N(n) {
+		nodes = vector<int>(N + 1, -1);
+		mp.resize(N + 1); // Color for each node.
+		component = n;
+	}
+
+	// find parent or get representive component (uses path compression)
+	int find_parent(int x) {
+		return nodes[x] < 0 ? x : nodes[x] = find_parent(nodes[x]);
+	}
+
+	// connects x and y
+	bool unite(int x, int y) {  // union by size
+		x = find_parent(x);
+		y = find_parent(y);
+
+		if (x == y)
+			return false;
+
+		// Small To Large
+		if (nodes[x] > nodes[y])
+			swap(x, y);
+
+		
+		for (auto [u, cnt] : mp[y])
+			mp[x][u] += cnt;
+
+
+		mp[y].clear();
+
+		nodes[x] += nodes[y];
+		nodes[y] = x;
+		component--;
+		return true;
+	}
+};
+
+vector<vector<int>> graph;
+vector<int> sizee, color, ans;
+dsu d(0);
+
+void init(int n) {
+	graph.resize(n + 1);
+	sizee.resize(n + 1);
+	color.resize(n + 1);
+	ans.resize(n + 1);
+	d = dsu(n + 1);
+}
+
+void add_edge(int u, int v) {
+	graph[u].push_back(v);
+	graph[v].push_back(u);
+}
+
+void graph_input(int n) {
+	for (int i = 0; i < n; i++) {
+		int u, v;
+		cin >> u >> v;
+		add_edge(u, v);
+	}
+}
+
+void dfs(int s, int p) {
+	for (int u : graph[s]) {
+		if (u == p) continue;
+		dfs(u, s);
+		d.unite(u, s);
+	}
+	ans[s] = d.mp[d.find_parent(s)].size();
+}
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	 <tabTrigger>dsu_on_tree</tabTrigger> 
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	 <scope>source.c++</scope> 
+</snippet>

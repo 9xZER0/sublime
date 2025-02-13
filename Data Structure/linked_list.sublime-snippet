@@ -1,0 +1,31 @@
+<snippet>
+	<content><![CDATA[
+
+	list<int> a, b;
+
+	a.push_back();
+	a.pop_back();
+	a.emplace(it, 1);
+
+	map<int, list<int>::iterator> mp;
+	mp[i] = prev(ls.end());
+	auto A = mp[a], B = mp[b];
+	A -> splice(A -> end(), *B);
+
+	// Transfer -> O(1)
+	a.splice(a.end(), b);
+	a.splice(a.end(), b, start, end);
+
+	// Swap() -> O(1)
+	std::list<int> temp1, temp2;
+	temp1.splice(temp1.begin(), a, it1_start, it1_end);
+	temp2.splice(temp2.begin(), b, it2_start, it2_end);
+	a.splice(it1_end, temp2);
+	b.splice(it2_end, temp1);
+
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	 <tabTrigger>linked_list</tabTrigger> 
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	 <scope>source.c++</scope> 
+</snippet>

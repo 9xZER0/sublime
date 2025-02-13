@@ -1,0 +1,45 @@
+<snippet>
+	<content><![CDATA[
+struct dsu_rollback {
+    vector<int> parent, sizee;
+    vector<pair<int&, int>> history;
+    int comp;
+
+    dsu_rollback(int n) : parent(n + 1), sizee(n + 1, 1), comp(n) {
+        iota(parent.begin(), parent.end(), 0);
+    }
+
+    int find_parent(int x) { return x == parent[x] ? x : find_parent(parent[x]); }
+
+    void unite(int a, int b) {
+        a = find_parent(a), b = find_parent(b);
+        if (a == b) return;
+        if (sizee[a] < sizee[b]) swap(a, b);
+
+        // {int&, int}
+        // {curValue, prevValue}
+        history.emplace_back(parent[b], parent[b]);
+        history.emplace_back(sizee[a], sizee[a]);
+        history.emplace_back(comp, comp);
+
+        comp--;
+        parent[b] = a;
+        sizee[a] += sizee[b];
+    }
+
+    int snapshot() { return history.size(); }
+
+    void rollback(int until) {
+        while (snapshot() > until) {
+            auto& [ref, old_value] = history.back();
+            ref = old_value;
+            history.pop_back();
+        }
+    }
+};
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	 <tabTrigger>dsu_with_rollback</tabTrigger> 
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	 <scope>source.c++</scope> 
+</snippet>

@@ -1,0 +1,13 @@
+<snippet>
+    <content><![CDATA[
+int n;
+cin >> n;
+
+vector<int> arr(n);
+for (auto &i : arr)
+	cin >> i;
+
+    ]]></content>
+    <tabTrigger>vector_input</tabTrigger>
+    <description>Snippet generated from vector_input</description>
+</snippet>
